@@ -1,0 +1,37 @@
+{
+  "variables": {
+    "docker_user": "{{ env `DOCKER_USER`}}",
+    "docker_password": "{{ env `DOCKER_PASSWORD`}}"
+  },
+  "builders": [
+    {
+      "type": "docker",
+      "image": "redbeard28/debian:stretch-python3",
+      "commit": true,
+      "run_command": ["-d", "-i", "-t", "{{.Image}}", "/bin/sh"]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "user": "root",
+      "galaxy_file": "requirements.yml",
+      "playbook_file": "provision.yml"
+    }
+  ],
+  "post-processors": [
+	[
+	  	{
+  		"type": "docker-tag",
+  		"repository": "redbeard28/debian",
+  		"tag": "stretch-basetools"
+		},
+        {
+          "type": "docker-push",
+          "login_username": "{{ user `docker_user`}}",
+          "login_password": "{{ user `docker_password`}}",
+          "login": true
+        }
+     ]
+  ]
+}

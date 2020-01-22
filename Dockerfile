@@ -14,7 +14,8 @@ RUN apt-get update ; \
     rm -rf /lib/systemd/system/sockets.target.wants/*udev* ; \
     rm -rf /lib/systemd/system/sockets.target.wants/*initctl* ; \
     rm -rf /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup* ; \
-    rm -rf /lib/systemd/system/systemd-update-utmp*
+    rm -rf /lib/systemd/system/systemd-update-utmp* ; \
+    test -e /usr/bin/python || (apt-get -y update && apt-get install -y python3 sudo gnupg python3-apt openssl)
 
 # Mount cgroup volume
 VOLUME [ "/sys/fs/cgroup" ]
